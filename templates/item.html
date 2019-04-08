@@ -1,0 +1,42 @@
+{% include "banner.html" %}
+<style type="text/css">
+	body,
+	.bg {
+		background-color: rgb(37, 37, 37);
+	}
+
+	.mbtn {
+		float: center;
+		margin-bottom: 10px;
+	}
+</style>
+<html>
+	<body>
+		<div class="container bg">
+			<br>
+			<div class="container-fluid bg" style="border: 1px solid black; background-color:cornsilk">
+				<div class="row">
+					<div class="col-md-12">
+						<h1>{{name}}</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-12">
+						<p>{{description}}</p>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+						{% if user %}
+						<a class="btn btn-primary mbtn" href="{{url_for('editItem', item = name)}}" role="button"
+							style="margin-right: 5px;">Edit</a>
+						<a class="btn btn-info mbtn" href="{{url_for('deleteItem', item = name)}}" role="button">Delete</a>
+						{% endif %}
+					</div>
+					<div class="col-md-10"></div>
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8">
+		<title>Catalog App</title>
+		<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+		<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.2/jquery.min.js"></script>	
+		<script src="https://apis.google.com/js/platform.js?onload=start"></script>
+		<script>
+			gapi.load('auth2', function() {
+				auth2 = gapi.auth2.init({
+					client_id: '39438690262-8r1ik9of0toohpmipunftn94st28pm3v.apps.googleusercontent.com'
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<div class="row"></div>
+			<div class="container-fluid">
+				<div class="row top-menu" style="background-color: rgb(68, 68, 214)">
+					<div class="col-md-6" style="padding-bottom: 1px;">
+						<a href="{{url_for('index')}}">
+							<h1 style="color:rgb(202, 142, 30)">Catalog App</h1>
+						</a>
+					</div>
+					<div class="col-md-4"></div>
+					<div class="col-md-2" style="padding-top: 14px; padding-bottom: 5px;">
+						{% if login == 0 %}
+						<button class="btn btn-secondary" onclick="logIn()"  id="logInButton" style="display: inline;">Login</button>
+						<button class="btn btn-secondary" onclick="logOut()" id="logOutButton" style="display: none;">Logout</button>
+						{% endif %}
+						{% if login == 1 %}
+						<button class="btn btn-secondary" onclick="logIn()" id="logInButton" style="display: none;"    >Login</button>
+						<button class="btn btn-secondary" onclick="logOut()" id="logOutButton" style="display: inline;">Logout</button>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		<script>
+					function logIn() {
+						auth2.grantOfflineAccess({'redirect_uri': 'postmessage'}).then(logInCallback);
+					}
+		</script>
+		
+		<script>
+			function logInCallback(json) {
+				console.log(json);
+				authResult = json;
+
+				if (authResult['code']) {
+					// if affirmative results switch button premptively?
+					$('#logInButton').attr('style', 'display: none');
+					$('#logOutButton').attr('style', 'display: inline');
+					// Send auth_code to backend for authz
+					$.ajax({
+						type: 'POST',
+						url: '/oauth',
+						processData: false,
+						data: authResult['code'],
+						contentType: 'application/octet-stream; charset=utf-8',
+						success: function(result) {
+							//Verify Backend response and handle potential errors
+							if (result) {
+								console.log("Logged In")
+							} else if (authResult['error']) {
+									console.log('There was an error authorizing: ' + authResult['error']);
+									//switch buttons back
+									$('#logInButton').attr('style', 'display: inline');
+									$('#logOutButton').attr('style', 'display: none');
+
+							} else {
+								//or something else bad happened?
+								console.log("500 error")
+								//switch buttons back
+								$('#logInButton').attr('style', 'display: inline');
+								$('#logOutButton').attr('style', 'display: none');
+							}
+						}
+					}); 
+				}
+			}
+	</script>
+
+		<script>
+			function logOut() {
+				// switch button premptively again
+				$('#logInButton').attr('style', 'display: inline');
+				$('#logOutButton').attr('style', 'display: none');
+					auth2.signOut().then(function() {
+							// according to google the user is signed off
+							console.log('User is logged out.');
+					});
+					$.ajax({
+					type: 'POST',
+					url: '/logout',
+					processData: false,
+					data: '',
+					contentType: 'application/json',
+					success: function(result) {
+						//Verify Backend response and handle potential errors
+						if (result) {
+							console.log("success")
+						} else if (authResult['error']) {
+								console.log('There was an error signing out of the server: ' + authResult['error']);
+									//switch buttons back
+									$('#logInButton').attr('style', 'display: none');
+									$('#logOutButton').attr('style', 'display: inline');
+						} else {
+							console.log("500 error")
+							//switch buttons back
+							$('#logInButton').attr('style', 'display: none');
+							$('#logOutButton').attr('style', 'display: inline');
+						}
+					}
+				});
+			}
+		</script>
+	</body>
+</html>

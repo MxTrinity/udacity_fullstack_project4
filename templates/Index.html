@@ -1,0 +1,63 @@
+{% include "banner.html" %}
+<style type="text/css">
+	.lists {
+		border-left: 3px solid black;
+	}
+
+	.category {
+		font-size: 24;
+		font-family: sans-serif;
+	}
+
+	.item {
+		font-size: 20;
+		font-family: sans-serif;
+	}
+
+	body,
+	.bg {
+		background-color: rgb(37, 37, 37);
+	}
+</style>
+<html>
+	<body>
+		<div class="container bg">
+			<br>
+			<div class="row container-fluid" style="border: 1px solid black; background-color:cornsilk">
+				<div class="col-md-3">
+					<h1>Categories</h1>
+					<nav>
+						<ul>
+							{% for C in categories %}
+							<li class="category">
+								<a href="{{url_for('category', category = C.name)}}">{{C.name}}</a>
+							</li>
+							{% endfor %}
+
+						</ul>
+					</nav>
+				</div>
+				<div class="col-md-1"></div>
+				<div class="col-md-8">
+
+					<h1>{{title}}</h1>
+					<nav>
+						<ul>
+							{% for I in items %}
+							<li class="item">
+								<a href="{{url_for('item', category = I.category.name, item = I.name)}}">{{I.name}} (
+									<small>{{I.category.name}}</small> )</a>
+							</li>
+							{% endfor %}
+						</ul>
+						{% if login == 1 %}
+						<a class="btn btn-primary" href="{{url_for('addItem')}}" role="button"
+							style="margin-bottom: 5px; margin-left: 35px;"> Add New Item </a>
+						{% endif %}
+					</nav>
+
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

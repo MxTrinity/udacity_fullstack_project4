@@ -1,0 +1,39 @@
+{% include "banner.html" %}
+<style type="text/css">
+	body,
+	.bg {
+		background-color: rgb(37, 37, 37);
+	}
+</style>
+<html>
+	<body>
+		<div class="container bg">
+		<br>
+			<div class="container-fluid" style="border: 1px solid black; padding: 20px; background-color:cornsilk"">
+				<div class=" row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-10">
+						<h1>Delete Item</h1>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-10">
+						<h3> Are you SURE you want to delete {{item.name}} ?</h3>
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-10">
+						<form action="{{ url_for('deleteItem', item=item.name)}}" method='POST'>
+							<button type="submit" class="btn btn-danger">Delete</button>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>

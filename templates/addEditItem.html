@@ -1,0 +1,90 @@
+{% include "banner.html" %}
+<style type="text/css">
+	body,
+	.bg {
+		background-color: rgb(37, 37, 37);
+	}
+</style>
+<html>
+	<body>
+		<div class="container bg">
+			<br>
+			<div class="container-fluid" style="border: 1px solid black; padding: 20px; background-color:cornsilk">
+				<div class="row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-10">
+						{% if type == "add" %}
+						<h1>Add Item</h1>
+						{% endif %}
+						{% if type == "edit" %}
+						<h1>Edit Item</h1>
+						{% endif %}
+					</div>
+				</div>
+				<div class="row">
+					<div class="col-md-2">
+					</div>
+					<div class="col-md-8">
+						{% if type == "add" %}
+						<form action="{{ url_for('addItem')}}" method='POST'>
+
+							<div class="form-group">
+								<label for="name">Name: </label>
+								<input type="text" size="30" class="form-control" name="name" placeholder="Name">
+
+								<div class="form-group">
+									<label for="name">Description: </label>
+									<input type="text" size="100" class="form-control" name="description"
+										placeholder='Description'>
+								</div>
+
+								<div class="form-group">
+									<label for="category">Category: </label>
+									<select class="form-control" name="category">
+										{% for C in categories %}
+										<option>{{C.name}}</option>
+										{% endfor %}
+									</select>
+								</div>
+								<button type="submit" class="btn btn-primary">Add Item</button>
+								
+						</form>
+						{% endif %}
+						{% if type == "edit" %}
+						<form action="{{ url_for('editItem',item=item.name)}}" method='POST'>
+
+							<div class="form-group">
+								<label for="name">Edit name for {{item.name}}:</label>
+								<input type="text" size="30" class="form-control" name="name" placeholder="{{item.name}}">
+
+								<div class="form-group">
+									<label for="name">Edit description for {{item.name}}:</label>
+									<input type="text" size="100" class="form-control" name="description"
+										placeholder="{{item.description}}"">
+							</div>
+							
+							<div class=" form-group">
+									<label for="category">Modify the Category for {{item.name}}: </label>
+									<select class="form-control" name="category">
+										{% for C in categories %}
+										{% if C.name == item.category.name %}
+										<option selected>{{C.name}}</option>
+										{% else %}
+										<option>{{C.name}}</option>
+										{% endif %}
+										{% endfor %}
+									</select>
+								</div>
+								<button type="submit" class="btn btn-primary">Submit Edits</button>
+
+						</form>
+						{% endif %}
+					</div>
+					<div class="col-md-2">
+					</div>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
