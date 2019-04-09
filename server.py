@@ -212,6 +212,12 @@ def getJSON():
     Session.remove()
     return jsonify(x)
 
+@app.route('/catalog/item/<int:item_id>.json', methods=['GET'])
+def getJSON2(item_id):
+    session = Session()
+    item = session.query(Item).filter_by(id=item_id).one()
+    Session.remove()
+    return jsonify(item.serialize)
 
 @app.route('/token')
 @auth.login_required
